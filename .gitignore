@@ -20,3 +20,9 @@ Thumbs.db
 # 临时文件
 *.tmp
 *.log
+
+# mihomo 可执行文件（不提交）
+mihomo-bin
+mihomo.exe
+*.gz
+

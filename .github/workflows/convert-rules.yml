@@ -2,7 +2,7 @@ name: Update Ad Block Rules
 
 on:
   schedule:
-    - cron: '0 18 * * *'  # 每天 UTC 18:00 (北京时间凌晨 2:00)
+    - cron: '0 18 * * *'
   workflow_dispatch:
   push:
     branches:
@@ -26,13 +26,17 @@ jobs:
         with:
           python-version: '3.11'
       
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           pip install requests
       
-      - name: Run converter
+      - name: Step 1 - Convert hosts to YAML
         run: |
           python scripts/converter.py
+      
+      - name: Step 2-4 - Convert all YAML to MRS
+        run: |
+          python scripts/convert_all_to_mrs.py
       
       - name: Check for changes
         id: check_changes

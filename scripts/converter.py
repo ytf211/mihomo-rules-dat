@@ -9,7 +9,6 @@ SOURCES = [
         'url': 'https://raw.githubusercontent.com/2Gardon/SM-Ad-FuckU-hosts/master/SMAdHosts',
         'name': 'SM-Ad-FuckU-hosts'
     }
-    # 可以继续添加其他规则源
 ]
 
 OUTPUT_FILE = 'mihomo/rulest/app_ad.yaml'
@@ -30,10 +29,8 @@ def parse_hosts(content):
     domains = []
     for line in content.split('\n'):
         line = line.strip()
-        # 跳过空行和注释
         if not line or line.startswith('#'):
             continue
-        # 提取域名部分
         parts = line.split()
         if len(parts) >= 2 and parts[0] in ['0.0.0.0', '127.0.0.1']:
             domains.append(parts[1])
@@ -41,10 +38,7 @@ def parse_hosts(content):
 
 def convert_to_yaml(domains, output_file):
     """转换为 YAML 格式"""
-    # 确保输出目录存在
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
-    
-    # 去重并排序
     unique_domains = sorted(set(domains))
     
     with open(output_file, 'w', encoding='utf-8') as f:
@@ -59,11 +53,12 @@ def convert_to_yaml(domains, output_file):
     return len(unique_domains)
 
 def main():
-    print("开始处理广告拦截规则...")
+    print("=" * 60)
+    print("步骤 1: 开始处理广告拦截规则（hosts -> YAML）")
+    print("=" * 60)
     
     all_domains = []
     
-    # 下载并解析所有规则源
     for source in SOURCES:
         content = download_hosts(source['url'])
         if content:
@@ -72,13 +67,13 @@ def main():
             print(f"✓ 从 {source['name']} 获取 {len(domains)} 条记录")
     
     if not all_domains:
-        print("错误：未获取到任何规则")
+        print("✗ 错误：未获取到任何规则")
         return 1
     
-    # 转换并保存
     count = convert_to_yaml(all_domains, OUTPUT_FILE)
     print(f"✓ 成功转换 {count} 条唯一记录")
     print(f"✓ 输出文件：{OUTPUT_FILE}")
+    print()
     
     return 0
 
